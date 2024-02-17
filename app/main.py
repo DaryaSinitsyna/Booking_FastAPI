@@ -2,7 +2,15 @@ from fastapi import FastAPI, Query, Depends
 from datetime import date
 from pydantic import BaseModel
 
+from app.hotels.models import Hotels # noqa
+from app.users.models import Users # noqa
+from app.hotels.rooms.models import Rooms # noqa
+from app.bookings.models import Bookings # noqa
+
+from app.bookings.router import router as router_bookings
 app = FastAPI()
+
+app.include_router(router_bookings)
 
 
 class HotelSearchArgs:

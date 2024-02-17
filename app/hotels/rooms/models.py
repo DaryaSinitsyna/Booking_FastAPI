@@ -4,11 +4,9 @@ from sqlalchemy.orm import relationship, Mapped, mapped_column
 
 from app.database import Base
 
-
 if TYPE_CHECKING:
     from app.hotels.models import Hotels
     from app.bookings.models import Bookings
-
 
 
 class Rooms(Base):
