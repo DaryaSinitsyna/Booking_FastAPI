@@ -23,6 +23,11 @@ INSERT INTO users (email, hashed_password) VALUES
 ('fedor@moloko.ru', 'tut_budet_hashed_password_1'),
 ('sharik@moloko.ru', 'tut_budet_hashed_password_2');
 
+
 INSERT INTO bookings (room_id, user_id, date_from, date_to, price) VALUES
 (1, 1, '2023-06-15', '2023-06-30', 24500),
-(7, 2, '2023-06-25', '2023-07-10', 4300);
+(7, 2, '2023-06-25', '2023-07-10', 4350),
+(1, 3, '2023-06-01', '2023-06-25', 24500),
+(2, 3, '2023-03-18', '2023-03-25', 4570),
+(3, 3, '2023-05-18', '2023-06-25', 7080),
+(3, 3, '2023-05-30', '2023-06-30', 7080);
