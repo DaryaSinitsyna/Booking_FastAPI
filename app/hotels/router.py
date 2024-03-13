@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import date
 from typing import Optional
 
 from fastapi import APIRouter, Query
@@ -21,7 +21,7 @@ async def get_hotel(
 
 
 @router.get("")
-async def get_hotels_by_location_and_date(
+async def get_hotels_by_location_name_date(
         location: Optional[str] = None,
         name: Optional[str] = None,
         date_from: date = Query(date.today()),

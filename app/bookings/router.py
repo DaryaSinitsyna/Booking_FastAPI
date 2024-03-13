@@ -23,7 +23,7 @@ async def add_bookings(
         date_from: date,
         date_to: date,
         user: Users = Depends(get_current_user)
-) -> list[SBookingInfo]:
+) -> SBookingInfo:
     return await BookingDAO.add(user.id, room_id, date_from, date_to)
 
 

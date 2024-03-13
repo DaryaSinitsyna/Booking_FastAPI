@@ -23,11 +23,14 @@ class HotelsDAO(BaseDAO):
                                 name: Optional[str] = None,
                                 ):
         """
-        WITH booked_rooms AS (
-            SELECT *
-            FROM bookings
-            WHERE bookings.date_from >= '2024-03-01' AND bookings.date_from <= '2024-03-01'
-            OR bookings.date_from <= '2024-03-01' AND bookings.date_to > '2024-03-01'),
+        WITH booked_rooms AS(
+        SELECT *
+        FROM bookings
+        WHERE
+        bookings.date_from between '2023-06-16' AND '2023-06-30'
+        OR bookings.date_to between '2023-06-16' AND '2023-06-30'
+        OR bookings.date_from < '2023-06-16' AND bookings.date_to > '2023-06-30'
+        ),
         hotels_rooms_left AS (
             SELECT hotels.rooms_quantity - count(booked_rooms.room_id) AS rooms_left, rooms.hotel_id AS hotel_id
             FROM hotels
@@ -42,19 +45,17 @@ class HotelsDAO(BaseDAO):
         async with async_session_maker() as session:
             booked_rooms = (
                 select(Bookings)
-                    .filter(
-                    or_(
-                        and_(
-                            Bookings.date_from >= date_from,
-                            Bookings.date_from <= date_to,
-                        ),
-                        and_(
-                            Bookings.date_from <= date_from,
-                            Bookings.date_to > date_from,
-                        ),
-                    ),
-                )
-            ).cte("booked_rooms")
+                    .where(
+                        or_(
+                            Bookings.date_from.between(date_from, date_to),
+                            Bookings.date_to.between(date_from, date_to),
+                            and_(
+                                Bookings.date_from < date_from,
+                                Bookings.date_to > date_to,
+                            )
+                        )
+                    )
+                ).cte("booked_rooms")
 
             hotels_rooms_left = (
                 select(
@@ -98,11 +99,14 @@ class HotelsDAO(BaseDAO):
                                date_to: date,
                                ):
         """
-        WITH booked_rooms AS (
-            SELECT *
-            FROM bookings
-            WHERE bookings.date_from >= '2024-03-01' AND bookings.date_from <= '2024-03-01'
-            OR bookings.date_from <= '2024-03-01' AND bookings.date_to > '2024-03-01')
+        WITH booked_rooms AS(
+        SELECT *
+        FROM bookings
+        WHERE
+        bookings.date_from between '2023-06-16' AND '2023-06-30'
+        OR bookings.date_to between '2023-06-16' AND '2023-06-30'
+        OR bookings.date_from < '2023-06-16' AND bookings.date_to > '2023-06-30'
+        )
 
 
         SELECT rooms.quantity - (COUNT(booked_rooms.room_id)FILTER (WHERE booked_rooms.room_id IS NOT NULL)) AS rooms_left,
@@ -115,19 +119,17 @@ class HotelsDAO(BaseDAO):
         async with async_session_maker() as session:
             booked_rooms = (
                 select(Bookings)
-                    .filter(
-                    or_(
-                        and_(
-                            Bookings.date_from >= date_from,
-                            Bookings.date_from <= date_to,
-                        ),
-                        and_(
-                            Bookings.date_from <= date_from,
-                            Bookings.date_to > date_from,
-                        ),
-                    ),
-                )
-            ).cte("booked_rooms")
+                    .where(
+                        or_(
+                            Bookings.date_from.between(date_from, date_to),
+                            Bookings.date_to.between(date_from, date_to),
+                            and_(
+                                Bookings.date_from < date_from,
+                                Bookings.date_to > date_to,
+                            )
+                        )
+                    )
+                ).cte("booked_rooms")
 
             get_rooms_left = (
                 select(
@@ -145,9 +147,5 @@ class HotelsDAO(BaseDAO):
                     .group_by(Rooms.quantity, booked_rooms.c.room_id, Rooms.id)
             )
 
-            print(get_rooms_left.compile(engine, compile_kwargs={"literal_binds": True}))
-
             rooms_info = await session.execute(get_rooms_left)
-
-            print(get_rooms_left)
             return {"hotel_id": hotel_id, "rooms": rooms_info.mappings().all()}

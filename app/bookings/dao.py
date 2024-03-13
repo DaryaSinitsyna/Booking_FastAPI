@@ -22,11 +22,13 @@ class BookingDAO(BaseDAO):
             date_to: date,
     ):
         """
-        WITH booked_rooms AS (
-            SELECT * FROM bookings
-            WHERE room_id = 1 AND
-                (date_from >= '2023-05-15' AND date_from <= '2023-06-20') OR
-                (date_from <= '2023-05-15' AND date_to > '2023-05-15')
+        WITH booked_rooms AS(
+        SELECT *
+        FROM bookings
+        WHERE room_id = 1 AND (
+        bookings.date_from between '2023-06-16' AND '2023-06-30'
+        OR bookings.date_to between '2023-06-16' AND '2023-06-30'
+        OR bookings.date_from < '2023-06-16' AND bookings.date_to > '2023-06-30')
         )
         SELECT rooms.quantity - COUNT(booked_rooms.room_id) FROM rooms
         LEFT JOIN booked_rooms ON booked_rooms.room_id = rooms.id
@@ -41,18 +43,15 @@ class BookingDAO(BaseDAO):
                         and_(
                             Bookings.room_id == room_id,
                             or_(
+                                Bookings.date_from.between(date_from, date_to),
+                                Bookings.date_to.between(date_from, date_to),
                                 and_(
-                                    Bookings.date_from >= date_from,
-                                    Bookings.date_from <= date_to,
-                                ),
-                                and_(
-                                    Bookings.date_from <= date_from,
-                                    Bookings.date_to > date_from,
-                                ),
-                            ),
+                                    Bookings.date_from < date_from,
+                                    Bookings.date_to > date_to,
+                                )
+                            )
                         )
-                    )
-                        .cte("booked_rooms")
+                    ).cte("booked_rooms")
                 )
 
                 get_rooms_left = (
