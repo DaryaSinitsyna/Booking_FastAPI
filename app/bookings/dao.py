@@ -67,7 +67,7 @@ class BookingDAO(BaseDAO):
                         .group_by(Rooms.quantity, booked_rooms.c.room_id)
                 )
 
-                # Для выводы SQL запрос в консоль
+                # Для вывода SQL запрос в консоль
                 # get_rooms_left.compile(engine, compile_kwargs={"literal_binds": True})
 
                 rooms_left = await session.execute(get_rooms_left)

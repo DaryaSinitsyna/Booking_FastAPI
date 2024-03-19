@@ -110,7 +110,8 @@ class HotelsDAO(BaseDAO):
 
 
         SELECT rooms.quantity - (COUNT(booked_rooms.room_id)FILTER (WHERE booked_rooms.room_id IS NOT NULL)) AS rooms_left,
-        rooms.id AS room_id
+        rooms.id AS id, rooms.name AS name, rooms.description AS description, rooms.price AS price,rooms.services AS services,
+        rooms.quantity AS quantity, rooms.image_id AS image_id
         FROM rooms
         LEFT OUTER JOIN booked_rooms ON booked_rooms.room_id = rooms.id
         WHERE rooms.hotel_id = 1
@@ -136,7 +137,13 @@ class HotelsDAO(BaseDAO):
                     (Rooms.quantity - func.count(booked_rooms.c.room_id).filter(
                         booked_rooms.c.room_id.is_not(None))).label(
                         "rooms_left"),
-                    Rooms.id.label("room_id"),
+                    Rooms.id.label("id"),
+                    Rooms.name.label("name"),
+                    Rooms.description.label("description"),
+                    Rooms.price.label("price"),
+                    Rooms.services.label("services"),
+                    Rooms.quantity.label("quantity"),
+                    Rooms.image_id.label("image_id"),
                 )
                     .select_from(Rooms)
                     .outerjoin(

@@ -1,7 +1,9 @@
+import asyncio
 from datetime import date
 from typing import Optional
 
 from fastapi import APIRouter, Query
+from fastapi_cache.decorator import cache
 
 from app.hotels.dao import HotelsDAO
 from app.hotels.rooms.schemas import SHotelRoomsInfo
@@ -21,6 +23,7 @@ async def get_hotel(
 
 
 @router.get("")
+@cache(expire=20)
 async def get_hotels_by_location_name_date(
         location: Optional[str] = None,
         name: Optional[str] = None,
@@ -28,6 +31,7 @@ async def get_hotels_by_location_name_date(
         date_to: date = Query(date.today()),
 
 ) -> list[SHotelInfo]:
+    await asyncio.sleep(3)
     hotels = await HotelsDAO.search_for_hotels(date_from=date_from, date_to=date_to, location=location, name=name)
     return hotels
 

@@ -14,7 +14,7 @@ class SBooking(BaseModel):
     total_days: int
 
 
-class SBookingInfo(BaseModel):
+class SNewBooking(BaseModel):
     id: int
     user_id: int
     room_id: int
