@@ -6,7 +6,6 @@ from fastapi import APIRouter, Query
 from fastapi_cache.decorator import cache
 
 from app.hotels.dao import HotelsDAO
-from app.hotels.rooms.schemas import SHotelRoomsInfo
 from app.hotels.schemas import SHotelInfo, SHotel
 
 router = APIRouter(

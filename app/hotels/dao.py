@@ -1,10 +1,10 @@
 from datetime import date
 from typing import Optional
 
-from sqlalchemy import select, text, or_, and_, func
+from sqlalchemy import select, or_, and_, func
 
 from app.bookings.models import Bookings
-from app.database import engine
+
 
 from app.dao.base import BaseDAO
 from app.database import async_session_maker

@@ -71,3 +71,8 @@ class CannotProcessCSV(BookingException):
 class FailedToDeleteEntry(BookingException):
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
     detail = "Booking not found or not authorized to cancel"
+
+
+class FailedToDeleteSession(BookingException):
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    detail = "Session not found or not authorized to cancel"

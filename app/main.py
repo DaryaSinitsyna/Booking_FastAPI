@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 
@@ -52,7 +53,7 @@ app.include_router(router_pages)
 app.include_router(router_images)
 
 origins = [
-    'http://localhost:8000', '192.168.0.101', 'http://192.168.0.104:8000', 'test.ru'
+    'http://localhost:8000', '192.168.0.101', 'http://192.168.0.104:8000', 'http://localhost',
 ]
 
 app.add_middleware(
@@ -60,8 +61,8 @@ app.add_middleware(
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS", "DELETE", "PATCH", "PUT"],
-    allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Access-Authorization",
+    allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Authorization",
                    "Access-Control-Allow-Credentials"],
     expose_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers",
-                    "Access-Authorization", "Access-Control-Allow-Credentials"]
+                    "Access-Authorization", "Access-Control-Allow-Credentials", "Authorization"]
 )

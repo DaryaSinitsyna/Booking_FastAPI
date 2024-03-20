@@ -19,14 +19,15 @@ def verify_password(plain_password, hashed_password) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def create_access_token(data: dict) -> str:
+def create_access_token(data: dict):
     to_encode = data.copy()
+    date_create = datetime.utcnow()
     expire = datetime.utcnow() + timedelta(hours=24)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(
         to_encode, settings.SECRET_KEY, settings.ALGORITHM
     )
-    return encoded_jwt
+    return encoded_jwt, date_create, expire
 
 
 async def authenticate_user(email: EmailStr, password: str):

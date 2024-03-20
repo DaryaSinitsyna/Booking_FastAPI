@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Security
 from pydantic import TypeAdapter
 
 from app.bookings.dao import BookingDAO
@@ -11,6 +11,8 @@ from datetime import date
 from app.tasks.tasks import send_booking_confirmation_email
 from fastapi import BackgroundTasks
 
+from app.users.router import header
+
 router = APIRouter(
     prefix="/bookings",
     tags=["Bookings"],
@@ -18,7 +20,7 @@ router = APIRouter(
 
 
 @router.get('')
-async def get_bookings(user: Users = Depends(get_current_user)) -> list[SBooking]:
+async def get_bookings(user: Users = Depends(get_current_user), header_value=Security(header)) -> list[SBooking]:
     return await BookingDAO.find_all(user_id=user.id)
 
 
@@ -38,7 +40,8 @@ async def add_booking(
         room_id: int,
         date_from: date,
         date_to: date,
-        user: Users = Depends(get_current_user)
+        user: Users = Depends(get_current_user),
+        header_value=Security(header)
 ):
     booking = await BookingDAO.add(
         user_id=user.id,
@@ -59,6 +62,7 @@ async def add_booking(
 @router.delete('', status_code=204)
 async def remove_bookings(
         booking_id: int,
-        current_user: Users = Depends(get_current_user)
+        current_user: Users = Depends(get_current_user),
+        header_value=Security(header)
 ):
     await BookingDAO.delete_booking(booking_id, current_user.id)

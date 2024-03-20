@@ -7,7 +7,6 @@ if TYPE_CHECKING:
     from app.bookings.models import Bookings
 
 
-
 class Users(Base):
     __tablename__ = "users"
 

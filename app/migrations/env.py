@@ -8,6 +8,8 @@ from os.path import abspath, dirname
 
 from alembic import context
 
+from app.users.sessions.models import Session
+
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 
 # this is the Alembic Config object, which provides
