@@ -43,13 +43,6 @@ async def login_user(response: Response, user_data: SUserAuth):
     return {"Authorization": access_token}
 
 
-# @router_auth.post("/login")
-# async def login_user(response: Response, user_data: SUserAuth):
-#     user = await authenticate_user(user_data.email, user_data.password)
-#     access_token = create_access_token({"sub": str(user.id)})
-#     response.set_cookie("booking_access_token", access_token)
-#     return {"booking_access_token": access_token}
-
 @router_auth.post("/logout")
 async def logout_user(request: Request, current_user: Users = Depends(get_current_user), header_value=Security(header)):
     access_token = request.headers["Authorization"]
@@ -59,3 +52,13 @@ async def logout_user(request: Request, current_user: Users = Depends(get_curren
 @router_users.get("/me")
 async def read_users_me(current_user: Users = Depends(get_current_user), header_value=Security(header)):
     return current_user
+
+
+
+# вариант авторизации через cookie
+# @router_auth.post("/login")
+# async def login_user(response: Response, user_data: SUserAuth):
+#     user = await authenticate_user(user_data.email, user_data.password)
+#     access_token = create_access_token({"sub": str(user.id)})
+#     response.set_cookie("booking_access_token", access_token)
+#     return {"booking_access_token": access_token}

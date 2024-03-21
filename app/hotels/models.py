@@ -9,7 +9,6 @@ if TYPE_CHECKING:
     from app.hotels.rooms.models import Rooms
 
 
-
 class Hotels(Base):
     __tablename__ = "hotels"
 

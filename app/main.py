@@ -5,7 +5,10 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 
+from app.admin.auth import authentication_backend
+from app.admin.views import UserAdmin, BookingsAdmin, RoomsAdmin, HotelsAdmin
 from app.config import settings
+from app.database import engine
 from app.hotels.models import Hotels  # noqa
 from app.users.models import Users  # noqa
 from app.hotels.rooms.models import Rooms  # noqa
@@ -25,6 +28,8 @@ from fastapi_cache.decorator import cache
 
 from redis import asyncio as aioredis
 
+from sqladmin import Admin, ModelView
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -41,6 +46,13 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+admin = Admin(app, engine, authentication_backend=authentication_backend)
+
+admin.add_view(UserAdmin)
+admin.add_view(HotelsAdmin)
+admin.add_view(RoomsAdmin)
+admin.add_view(BookingsAdmin)
+
 app.mount("/static", StaticFiles(directory="app/static"), "static")
 
 app.include_router(router_auth)
@@ -52,8 +64,12 @@ app.include_router(router_rooms)
 app.include_router(router_pages)
 app.include_router(router_images)
 
+# origins = [
+#     'http://localhost:8000', '192.168.0.101', 'http://192.168.0.104:8000', 'http://localhost',
+# ]
+
 origins = [
-    'http://localhost:8000', '192.168.0.101', 'http://192.168.0.104:8000', 'http://localhost',
+    '*'
 ]
 
 app.add_middleware(

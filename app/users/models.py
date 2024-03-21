@@ -1,4 +1,6 @@
 from typing import TYPE_CHECKING
+
+from sqlalchemy import String
 from sqlalchemy.orm import relationship, mapped_column, Mapped
 
 from app.database import Base
@@ -13,6 +15,7 @@ class Users(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     email: Mapped[str]
     hashed_password: Mapped[str]
+    role: Mapped[str] = mapped_column(String, default='user')
 
     bookings: Mapped[list["Bookings"]] = relationship(back_populates="user")
 
