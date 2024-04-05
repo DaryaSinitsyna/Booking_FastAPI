@@ -22,13 +22,14 @@ router_users = APIRouter(
 header = APIKeyHeader(name="Authorization")
 
 
-@router_auth.post("/register", status_code=201)
+@router_auth.post("/register", status_code=201, response_model=str)
 async def register_user(user_data: SUserAuth):
     existing_user = await UsersDAO.find_one_or_none(email=user_data.email)
     if existing_user:
         raise UserAlreadyExistsException
     hashed_password = get_password_hash(user_data.password)
     await UsersDAO.add(email=user_data.email, hashed_password=hashed_password)
+    return "User successfully registered"
 
 
 @router_auth.post("/login")
@@ -52,8 +53,6 @@ async def logout_user(request: Request, current_user: Users = Depends(get_curren
 @router_users.get("/me")
 async def read_users_me(current_user: Users = Depends(get_current_user), header_value=Security(header)):
     return current_user
-
-
 
 # вариант авторизации через cookie
 # @router_auth.post("/login")
