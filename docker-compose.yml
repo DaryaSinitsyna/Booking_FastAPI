@@ -1,5 +1,17 @@
 version: '3.8'
 services:
+  nginx:
+    build:
+      context: .
+      dockerfile: "Dockerfile.nginx"
+    container_name: booking_nginx
+    ports:
+      - 80:80
+      - 443:443
+    links:
+      - booking
+      - flower
+
   db:
     image: postgres:15
     container_name: booking_db
@@ -34,8 +46,8 @@ services:
       redis:
         condition: service_started
     command: sh -c "alembic upgrade head && gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000"
-    ports:
-      - 7777:8000
+#    ports:
+#      - 7777:8000
 
   celery:
     image: booking_celery
@@ -54,13 +66,13 @@ services:
     build:
       context: .
     container_name: booking_flower
-    command: sh -c "celery --app=app.tasks.celery_app:celery flower"
+    command: sh -c "celery --app=app.tasks.celery_app:celery flower --url_prefix=/flower"
     env_file:
       - .env-non-dev
     depends_on:
       - redis
-    ports:
-      - 5555:5555
+#    ports:
+#      - 5555:5555
 
 
 
