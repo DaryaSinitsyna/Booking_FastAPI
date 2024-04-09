@@ -20,8 +20,8 @@ INSERT INTO rooms (hotel_id, name, description, price, quantity, services, image
 (6, 'Стандарт (типовой корпус)', 'Стандартный номер.', 8125, 45, '[]', 17);
 
 INSERT INTO users (email, hashed_password, role) VALUES
-('fedor@moloko.ru', 'tut_budet_hashed_password_1'),
-('sharik@moloko.ru', 'tut_budet_hashed_password_2');
+('fedor@moloko.ru', 'tut_budet_hashed_password_1', 'user'),
+('sharik@moloko.ru', 'tut_budet_hashed_password_2', 'user');
 
 
 INSERT INTO bookings (room_id, user_id, date_from, date_to, price) VALUES
