@@ -3,4 +3,3 @@ venv
 .env-non-dev
 __pycache__
 .idea
-app/static
