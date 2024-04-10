@@ -63,6 +63,5 @@ async def add_booking(
 async def remove_bookings(
         booking_id: int,
         current_user: Users = Depends(get_current_user),
-        header_value=Security(header)
 ):
     await BookingDAO.delete_booking(booking_id, current_user.id)
